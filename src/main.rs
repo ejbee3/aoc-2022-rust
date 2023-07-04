@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use std::fs;
 
 fn main() {
@@ -18,15 +19,22 @@ fn main() {
         let second_pair = (num_parser(middle[1])..num_parser(split[2]) + 1).collect::<Vec<u32>>();
         // println!("{:?}", second_pair);
 
-        if first_pair.len() > second_pair.len()
-            && second_pair[0] >= first_pair[0]
-            && second_pair[second_pair.len() - 1] <= first_pair[first_pair.len() - 1]
-        {
-            count += 1;
-        } else if first_pair[0] >= second_pair[0]
-            && first_pair[first_pair.len() - 1] <= second_pair[second_pair.len() - 1]
-        {
-            count += 1;
+        // if first_pair.len() > second_pair.len()
+        //     && second_pair[0] >= first_pair[0]
+        //     && second_pair[second_pair.len() - 1] <= first_pair[first_pair.len() - 1]
+        // {
+        //     count += 1;
+        // } else if first_pair[0] >= second_pair[0]
+        //     && first_pair[first_pair.len() - 1] <= second_pair[second_pair.len() - 1]
+        // {
+        //     count += 1;
+        // }
+
+        for a in first_pair.into_iter().cartesian_product(second_pair) {
+            if a.0 == a.1 {
+                count += 1;
+                break;
+            }
         }
     }
 
