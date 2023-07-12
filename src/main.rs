@@ -1,46 +1,27 @@
-use itertools::Itertools;
 use std::fs;
 
 fn main() {
     let contents = fs::read_to_string("input.txt").expect("wrong file name!");
 
-    let mut count: u32 = 0;
+    let mut big_container: Vec<Vec<&str>> = vec![];
 
-    for line in contents.lines() {
-        let split = line.split("-").collect::<Vec<&str>>();
-        // println!("{:?}", split);
+    for _ in 0..9 {
+        big_container.push(vec![]);
+    }
 
-        let middle = split[1].split(",").collect::<Vec<&str>>();
-        // println!("{:?}", middle);
+    for (i, line) in contents.lines().into_iter().enumerate() {
+        if i <= 7 {
+            let boxes: Vec<_> = line.match_indices(char::is_uppercase).collect();
 
-        let first_pair = (num_parser(split[0])..num_parser(middle[0]) + 1).collect::<Vec<u32>>();
-        // println!("{:?}", first_pair);
+            // println!("{:?}", v[0].0);
 
-        let second_pair = (num_parser(middle[1])..num_parser(split[2]) + 1).collect::<Vec<u32>>();
-        // println!("{:?}", second_pair);
-
-        // if first_pair.len() > second_pair.len()
-        //     && second_pair[0] >= first_pair[0]
-        //     && second_pair[second_pair.len() - 1] <= first_pair[first_pair.len() - 1]
-        // {
-        //     count += 1;
-        // } else if first_pair[0] >= second_pair[0]
-        //     && first_pair[first_pair.len() - 1] <= second_pair[second_pair.len() - 1]
-        // {
-        //     count += 1;
-        // }
-
-        for a in first_pair.into_iter().cartesian_product(second_pair) {
-            if a.0 == a.1 {
-                count += 1;
-                break;
+            for b in boxes {
+                let mut col_num = b.0 as f32;
+                col_num = (col_num / 4.0_f32).ceil();
+                let col_i = col_num as usize;
+                big_container[col_i - 1].push(b.1);
             }
         }
     }
-
-    println!("{:?}", count);
-}
-
-fn num_parser(s: &str) -> u32 {
-    s.parse().expect("this should be a number from the input!")
+    println!("{:?}", big_container);
 }
